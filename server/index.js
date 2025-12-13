@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Test Route (No DB)
 app.get('/', (req, res) => {
-    res.send('Backend is running!');
+    res.send('Backend is running!!');
 });
 
 // DB Route: Get Server Time
