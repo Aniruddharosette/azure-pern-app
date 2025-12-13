@@ -1,0 +1,40 @@
+name: Deploy Node.js Backend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'server/**' # Only runs when server code changes
+
+env:
+  # This is the resource name from your domain
+  AZURE_WEBAPP_NAME: 'cicdbackend-g5bxgkfbejcxg0bj'
+  NODE_VERSION: '18.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        cd server
+        npm install
+
+    - name: Zip artifact
+      run: |
+        cd server
+        zip -r ../release.zip ./*
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: release.zip

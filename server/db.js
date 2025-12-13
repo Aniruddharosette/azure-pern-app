@@ -1,11 +1,15 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-// Azure Postgres requires SSL connections
 const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    host: process.env.POSTGRES_HOST,
+    port: process.env.POSTGRES_PORT,
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    // SSL is required for Azure Postgres Flexible Server
     ssl: {
-        rejectUnauthorized: false // Required for Azure Flexible Server default setup
+        rejectUnauthorized: false 
     }
 });
 
